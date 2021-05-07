@@ -28,6 +28,9 @@ public class user {
 			return con; 
 	 } 
 	
+	
+	
+	
 	public String insertUser(String first_name, String last_name, String em, String usern, String pass) { 
 	 
 		String output = "";
@@ -59,12 +62,14 @@ public class user {
 			preparedStmt.execute(); 
 			con.close();
 			
-			output = "Inserted successfully"; 
+			String newUser = readUser(); 
+			 output = "{\"status\":\"success\", \"data\": \"" + 
+			 newUser + "\"}"; 
 			
 		} 
 		catch (Exception e) { 
-			output = "Error while inserting the item."; 
-			System.err.println(e.getMessage()); 
+			output = "{\"status\":\"error\", \"data\":  \"Error while inserting the user.\"}"; 
+					 System.err.println(e.getMessage()); 
 		} 
 		
 		return output; 
@@ -86,12 +91,7 @@ public class user {
 				} 
 	 
 				//create html table
-				output = "<table border='1'><tr><th>ID</th><th>First Name</th>" +
-						"<th>Last Name</th>" + 
-						"<th>Email</th>" +
-						"<th>Username</th>" +
-						"<th>Password</th>" +
-						"<th>Update</th><th>Remove</th></tr>"; 
+				output = "<table border=\"1\"><tr> <th>First Name</th> <th>Last Name</th> <th>Email</th> <th>Username</th> <th>Password</th> <th>Update</th><th>Remove</th></tr>"; 
 				
 				//query
 				String query = "select * from user"; 
@@ -104,7 +104,7 @@ public class user {
 				
 				while (rs.next()) { 
 					
-						String ID = Integer.toString(rs.getInt("id")); 
+						String id = Integer.toString(rs.getInt("id")); 
 						String first_name = rs.getString("first_name"); 
 						String last_name = rs.getString("last_name"); 
 						String em =rs.getString("em"); 
@@ -112,31 +112,37 @@ public class user {
 						String pass = rs.getString("pass");
 						
 						// Add into the html table
-						output += "<tr><td>" + ID + "</td>"; 
-						output += "<td>" + first_name + "</td>"; 
-						output += "<td>" + last_name + "</td>"; 
-						output += "<td>" + em + "</td>"; 
-						output += "<td>" + usern + "</td>";
-						output += "<td>" + pass + "</td>";
+						output += "<tr><td><input id='hidItemIDUpdate' name='hidItemIDUpdate' type='hidden' value='" + id + "'>"
+								 + first_name + "</td>";
+								 //output += "<td>"+ first_name + "</td>"; 
+								 output += "<td>" + last_name + "</td>"; 
+								 output += "<td>" + em + "</td>"; 
+								 output += "<td>" + usern + "</td>";
+								 output += "<td>" + pass + "</td>";
+						
 						
 						
 						// buttons
-						output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
-								+ "<td><form method='post' action='items.jsp'>"
-								+ "<input name='btnRemove' type='submit' value='Remove' class='btn btn-danger'>"
-								+ "<input name='id' type='hidden' value='" + ID + "'>" + "</form></td></tr>"; 
-	 
-				} 
+								 output += "<td><input name='btnUpdate' type='button' value='Upadate' class='btnUpdate btn btn-danger' data-id='" + id + "'>"
+										 +"</td>"
+										 +"<td><input name='btnRemove' type='button' value='Remove' class='btnRemove btn btn-danger' data-id='" + id + "'></td>";
+										
+
+								 
+								 
+								 
+								 
+									
+				}
 				
 				con.close(); 
-				// Complete the html table
-				output += "</table>"; 
-	 
+				output += "</table>";
 			} 
 			catch (Exception e) { 
 				
-				output = "Error while reading the user."; 
-				System.err.println(e.getMessage()); 
+				 output = "{\"status\":\"error\", \"data\":  \"Error while updating the user.\"}"; 
+				 System.err.println(e.getMessage()); 
+			 
 	 
 			} 
 			return output; 
@@ -178,22 +184,27 @@ public class user {
 			 		
 			 		// execute the statement
 			 		preparedStmt.execute(); 
-			 		con.close(); 
-			 		output = "Updated successfully"; 
+			 		con.close();
+			 		
+			 		String newUser = readUser(); 
+					 output = "{\"status\":\"success\", \"data\": \"" + 
+					 newUser + "\"}"; 
 		 
 		 } 
 		 
 		 
 		 catch (Exception e) { 
 			 
-		 output = "Error while updating the user."; 
-		 System.err.println(e.getMessage());
+			 output = "{\"status\":\"error\", \"data\":  \"Error while updating the user.\"}"; 
+			 System.err.println(e.getMessage()); 
 		 
 		 }
 		 
 		 return output; 
 		 
 	} 
+	
+	
 		public String deleteUser(String id) { 
 			
 			
@@ -226,15 +237,16 @@ public class user {
 			 			preparedStmt.execute(); 
 			 			con.close(); 
 			 			
-			 			output = "Deleted successfully"; 
+			 			String newUser = readUser(); 
+						 output = "{\"status\":\"success\", \"data\": \"" + 
+						 newUser + "\"}"; 
 		 
 		 } 
 		 
 		 catch (Exception e) {
 			 
-			 output = "Error while deleting the user."; 
-			 System.err.println(e.getMessage()); 
-		 
+			 output = "{\"status\":\"error\", \"data\":  \"Error while deleting the user.\"}"; 
+			 System.err.println(e.getMessage());
 		 } 
 		 
 		 	return output; 
@@ -307,6 +319,7 @@ public class user {
 		
 		public String insertAdmin(String first_name, String last_name, String em, String usern, String pass) { 
 			 
+
 			String output = "";
 			
 			try{ 
@@ -326,7 +339,6 @@ public class user {
 				PreparedStatement preparedStmt = con.prepareStatement(query); 
 				
 				// set values
-				
 				preparedStmt.setString(1, first_name); 
 				preparedStmt.setString(2, last_name); 
 				preparedStmt.setString(3, em); 
@@ -337,12 +349,14 @@ public class user {
 				preparedStmt.execute(); 
 				con.close();
 				
-				output = "Inserted successfully"; 
+				String newUser = readUser(); 
+				 output = "{\"status\":\"success\", \"data\": \"" + 
+				 newUser + "\"}"; 
 				
 			} 
 			catch (Exception e) { 
-				output = "Error while inserting the item."; 
-				System.err.println(e.getMessage()); 
+				output = "{\"status\":\"error\", \"data\":  \"Error while inserting the admin.\"}"; 
+						 System.err.println(e.getMessage()); 
 			} 
 			
 			return output; 
@@ -353,73 +367,178 @@ public class user {
 			String output = ""; 
 			
 			
-				try{ 
+			try{ 
+				
+				Connection con = connect(); 
+				
+				if (con == null) {
 					
-					Connection con = connect(); 
+					return "Error while connecting to the database for reading."; 
 					
-					if (con == null) {
-						
-						return "Error while connecting to the database for reading."; 
-						
-					} 
-		 
-					//create html table
-					output = "<table border='1'><tr><th>ID</th><th>First Name</th>" +
-							"<th>Last Name</th>" + 
-							"<th>Email</th>" +
-							"<th>Username</th>" +
-							"<th>Password</th>" +
-							"<th>Update</th><th>Remove</th></tr>"; 
-					
-					//query
-					String query = "select * from admin"; 
-					//create statement
-					Statement stmt = (Statement) con.createStatement(); 
-					
-					//create resultset
-					ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
-					
-					
-					while (rs.next()) { 
-						
-							String ID = Integer.toString(rs.getInt("id")); 
-							String first_name = rs.getString("first_name"); 
-							String last_name = rs.getString("last_name"); 
-							String em =rs.getString("em"); 
-							String usern = rs.getString("usern"); 
-							String pass = rs.getString("pass");
-							
-							// Add into the html table
-							output += "<tr><td>" + ID + "</td>"; 
-							output += "<td>" + first_name + "</td>"; 
-							output += "<td>" + last_name + "</td>"; 
-							output += "<td>" + em + "</td>"; 
-							output += "<td>" + usern + "</td>";
-							output += "<td>" + pass + "</td>";
-							
-							
-							// buttons
-							output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
-									+ "<td><form method='post' action='items.jsp'>"
-									+ "<input name='btnRemove' type='submit' value='Remove' class='btn btn-danger'>"
-									+ "<input name='id' type='hidden' value='" + ID + "'>" + "</form></td></tr>"; 
-		 
-					} 
-					
-					con.close(); 
-					// Complete the html table
-					output += "</table>"; 
-		 
 				} 
-				catch (Exception e) { 
+	 
+				//create html table
+				output = "<table border=\"1\"><tr> <th>First Name</th> <th>Last Name</th> <th>Email</th> <th>Username</th> <th>Password</th> <th>Update</th><th>Remove</th></tr>"; 
+				
+				//query
+				String query = "select * from admin"; 
+				//create statement
+				Statement stmt = (Statement) con.createStatement(); 
+				
+				//create resultset
+				ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
+				
+				
+				while (rs.next()) { 
 					
-					output = "Error while reading the user."; 
-					System.err.println(e.getMessage()); 
-		 
-				} 
-				return output; 
+						String id = Integer.toString(rs.getInt("id")); 
+						String first_name = rs.getString("first_name"); 
+						String last_name = rs.getString("last_name"); 
+						String em =rs.getString("em"); 
+						String usern = rs.getString("usern"); 
+						String pass = rs.getString("pass");
+						
+						// Add into the html table
+						output += "<tr><td><input id='hidItemIDUpdateA' name='hidItemIDUpdateA' type='hidden' value='" + id + "'>"
+								 + first_name + "</td>";
+								 //output += "<td>"+ first_name + "</td>"; 
+								 output += "<td>" + last_name + "</td>"; 
+								 output += "<td>" + em + "</td>"; 
+								 output += "<td>" + usern + "</td>";
+								 output += "<td>" + pass + "</td>";
+						
+						
+						
+						// buttons
+								 output += "<td><input name='btnUpdateA' type='button' value='Upadate' class='btnUpdateA btn btn-danger' data-id='" + id + "'>"
+										 +"</td>"
+										 +"<td><input name='btnRemoveA' type='button' value='Remove' class='btnRemoveA btn btn-danger' data-id='" + id + "'></td>";
+										
+
+								 
+								 
+								 
+								 
+									
+				}
+				
+				con.close(); 
+				output += "</table>";
+			} 
+			catch (Exception e) { 
+				
+				 output = "{\"status\":\"error\", \"data\":  \"Error while updating the admin.\"}"; 
+				 System.err.println(e.getMessage()); 
+			 
+	 
+			} 
+			return output; 
+	
+	} 
 		
+		public String updateAdmin(String id,String first_name, String last_name, String em, String usern, String pass){ 
+			
+			
+			 String output = ""; 
+			 
+			 try{
+				 
+				 
+				 Connection con = connect(); 
+				 
+				 if (con == null) {
+					 
+					 return "Error while connecting to the database for updating."; 
+					 
+				 } 
+				 
+				 
+				 	// query
+				 	String query = "UPDATE admin SET first_name=?,last_name=?,em=?,usern=?, pass=? WHERE id=?"; 
+				 	
+				 	//create statement
+				 	PreparedStatement preparedStmt = con.prepareStatement(query); 
+				 	
+				 	
+				 		// set values
+				 		
+				 		preparedStmt.setString(1, first_name); 
+				 		preparedStmt.setString(2, last_name); 
+				 		preparedStmt.setString(3, em); 
+				 		preparedStmt.setString(4, usern); 
+				 		preparedStmt.setString(5, pass);
+				 		preparedStmt.setInt(6, Integer.parseInt(id));
+				 		
+				 		// execute the statement
+				 		preparedStmt.execute(); 
+				 		con.close();
+				 		
+				 		String newUser = readUser(); 
+						 output = "{\"status\":\"success\", \"data\": \"" + 
+						 newUser + "\"}"; 
+			 
+			 } 
+			 
+			 
+			 catch (Exception e) { 
+				 
+				 output = "{\"status\":\"error\", \"data\":  \"Error while updating the user.\"}"; 
+				 System.err.println(e.getMessage()); 
+			 
+			 }
+			 
+			 return output; 
+			 
 		} 
+		
+		public String deleteAdmin(String id) { 
+			
+			
+			 String output = ""; 
+			 
+			 try{ 
+				 
+				 
+				 	Connection con = connect(); 
+				 	
+				 	
+				 		if (con == null) {
+				 			
+				 			return "Error while connecting to the database for deleting.";
+				 			
+				 		} 
+				 		
+				 		
+				 			// query
+				 			String query = "delete from admin where id=?"; 
+				 			
+				 			//create statment
+				 			PreparedStatement preparedStmt = con.prepareStatement(query);
+				 			
+				 			
+				 			// binding values
+				 			preparedStmt.setInt(1, Integer.parseInt(id)); 
+				 			
+				 			// execute the statement
+				 			preparedStmt.execute(); 
+				 			con.close(); 
+				 			
+				 			String newUser = readUser(); 
+							 output = "{\"status\":\"success\", \"data\": \"" + 
+							 newUser + "\"}"; 
+			 
+			 } 
+			 
+			 catch (Exception e) {
+				 
+				 output = "{\"status\":\"error\", \"data\":  \"Error while deleting the user.\"}"; 
+				 System.err.println(e.getMessage());
+			 } 
+			 
+			 	return output; 
+			 
+			} 
+		
 		
 		public String insertResearch(String first_name, String last_name, String em, String usern, String pass) { 
 			 
@@ -442,7 +561,6 @@ public class user {
 				PreparedStatement preparedStmt = con.prepareStatement(query); 
 				
 				// set values
-				
 				preparedStmt.setString(1, first_name); 
 				preparedStmt.setString(2, last_name); 
 				preparedStmt.setString(3, em); 
@@ -453,12 +571,14 @@ public class user {
 				preparedStmt.execute(); 
 				con.close();
 				
-				output = "Inserted successfully"; 
+				String newUser = readUser(); 
+				 output = "{\"status\":\"success\", \"data\": \"" + 
+				 newUser + "\"}"; 
 				
 			} 
 			catch (Exception e) { 
-				output = "Error while inserting the item."; 
-				System.err.println(e.getMessage()); 
+				output = "{\"status\":\"error\", \"data\":  \"Error while inserting the researcher.\"}"; 
+						 System.err.println(e.getMessage()); 
 			} 
 			
 			return output; 
@@ -469,73 +589,178 @@ public class user {
 			String output = ""; 
 			
 			
-				try{ 
+			try{ 
+				
+				Connection con = connect(); 
+				
+				if (con == null) {
 					
-					Connection con = connect(); 
+					return "Error while connecting to the database for reading."; 
 					
-					if (con == null) {
-						
-						return "Error while connecting to the database for reading."; 
-						
-					} 
-		 
-					//create html table
-					output = "<table border='1'><tr><th>ID</th><th>First Name</th>" +
-							"<th>Last Name</th>" + 
-							"<th>Email</th>" +
-							"<th>Username</th>" +
-							"<th>Password</th>" +
-							"<th>Update</th><th>Remove</th></tr>"; 
-					
-					//query
-					String query = "select * from research"; 
-					//create statement
-					Statement stmt = (Statement) con.createStatement(); 
-					
-					//create resultset
-					ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
-					
-					
-					while (rs.next()) { 
-						
-							String ID = Integer.toString(rs.getInt("id")); 
-							String first_name = rs.getString("first_name"); 
-							String last_name = rs.getString("last_name"); 
-							String em =rs.getString("em"); 
-							String usern = rs.getString("usern"); 
-							String pass = rs.getString("pass");
-							
-							// Add into the html table
-							output += "<tr><td>" + ID + "</td>"; 
-							output += "<td>" + first_name + "</td>"; 
-							output += "<td>" + last_name + "</td>"; 
-							output += "<td>" + em + "</td>"; 
-							output += "<td>" + usern + "</td>";
-							output += "<td>" + pass + "</td>";
-							
-							
-							// buttons
-							output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
-									+ "<td><form method='post' action='items.jsp'>"
-									+ "<input name='btnRemove' type='submit' value='Remove' class='btn btn-danger'>"
-									+ "<input name='id' type='hidden' value='" + ID + "'>" + "</form></td></tr>"; 
-		 
-					} 
-					
-					con.close(); 
-					// Complete the html table
-					output += "</table>"; 
-		 
 				} 
-				catch (Exception e) { 
+	 
+				//create html table
+				output = "<table border=\"1\"><tr> <th>First Name</th> <th>Last Name</th> <th>Email</th> <th>Username</th> <th>Password</th> <th>Update</th><th>Remove</th></tr>"; 
+				
+				//query
+				String query = "select * from research"; 
+				//create statement
+				Statement stmt = (Statement) con.createStatement(); 
+				
+				//create resultset
+				ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
+				
+				
+				while (rs.next()) { 
 					
-					output = "Error while reading the user."; 
-					System.err.println(e.getMessage()); 
-		 
-				} 
-				return output; 
+						String id = Integer.toString(rs.getInt("id")); 
+						String first_name = rs.getString("first_name"); 
+						String last_name = rs.getString("last_name"); 
+						String em =rs.getString("em"); 
+						String usern = rs.getString("usern"); 
+						String pass = rs.getString("pass");
+						
+						// Add into the html table
+						output += "<tr><td><input id='hidItemIDUpdateR' name='hidItemIDUpdateR' type='hidden' value='" + id + "'>"
+								 + first_name + "</td>";
+								 //output += "<td>"+ first_name + "</td>"; 
+								 output += "<td>" + last_name + "</td>"; 
+								 output += "<td>" + em + "</td>"; 
+								 output += "<td>" + usern + "</td>";
+								 output += "<td>" + pass + "</td>";
+						
+						
+						
+						// buttons
+								 output += "<td><input name='btnUpdateR' type='button' value='Upadate' class='btnUpdateR btn btn-danger' data-id='" + id + "'>"
+										 +"</td>"
+										 +"<td><input name='btnRemoveR' type='button' value='Remove' class='btnRemoveR btn btn-danger' data-id='" + id + "'></td>";
+										
+
+								 
+								 
+								 
+								 
+									
+				}
+				
+				con.close(); 
+				output += "</table>";
+			} 
+			catch (Exception e) { 
+				
+				 output = "{\"status\":\"error\", \"data\":  \"Error while updating the research.\"}"; 
+				 System.err.println(e.getMessage()); 
+			 
+	 
+			} 
+			return output; 
+	
+	} 
 		
+		public String updateResearch(String id,String first_name, String last_name, String em, String usern, String pass){ 
+			
+			
+			 String output = ""; 
+			 
+			 try{
+				 
+				 
+				 Connection con = connect(); 
+				 
+				 if (con == null) {
+					 
+					 return "Error while connecting to the database for updating."; 
+					 
+				 } 
+				 
+				 
+				 	// query
+				 	String query = "UPDATE research SET first_name=?,last_name=?,em=?,usern=?, pass=? WHERE id=?"; 
+				 	
+				 	//create statement
+				 	PreparedStatement preparedStmt = con.prepareStatement(query); 
+				 	
+				 	
+				 		// set values
+				 		
+				 		preparedStmt.setString(1, first_name); 
+				 		preparedStmt.setString(2, last_name); 
+				 		preparedStmt.setString(3, em); 
+				 		preparedStmt.setString(4, usern); 
+				 		preparedStmt.setString(5, pass);
+				 		preparedStmt.setInt(6, Integer.parseInt(id));
+				 		
+				 		// execute the statement
+				 		preparedStmt.execute(); 
+				 		con.close();
+				 		
+				 		String newUser = readUser(); 
+						 output = "{\"status\":\"success\", \"data\": \"" + 
+						 newUser + "\"}"; 
+			 
+			 } 
+			 
+			 
+			 catch (Exception e) { 
+				 
+				 output = "{\"status\":\"error\", \"data\":  \"Error while updating the user.\"}"; 
+				 System.err.println(e.getMessage()); 
+			 
+			 }
+			 
+			 return output; 
+			 
 		} 
+		
+		public String deleteResearch(String id) { 
+			
+			
+			 String output = ""; 
+			 
+			 try{ 
+				 
+				 
+				 	Connection con = connect(); 
+				 	
+				 	
+				 		if (con == null) {
+				 			
+				 			return "Error while connecting to the database for deleting.";
+				 			
+				 		} 
+				 		
+				 		
+				 			// query
+				 			String query = "delete from research where id=?"; 
+				 			
+				 			//create statment
+				 			PreparedStatement preparedStmt = con.prepareStatement(query);
+				 			
+				 			
+				 			// binding values
+				 			preparedStmt.setInt(1, Integer.parseInt(id)); 
+				 			
+				 			// execute the statement
+				 			preparedStmt.execute(); 
+				 			con.close(); 
+				 			
+				 			String newUser = readUser(); 
+							 output = "{\"status\":\"success\", \"data\": \"" + 
+							 newUser + "\"}"; 
+			 
+			 } 
+			 
+			 catch (Exception e) {
+				 
+				 output = "{\"status\":\"error\", \"data\":  \"Error while deleting the user.\"}"; 
+				 System.err.println(e.getMessage());
+			 } 
+			 
+			 	return output; 
+			 
+			} 
+		
 		
 
 		public String loginAdmin(String usern, String pass) {
