@@ -1,41 +1,34 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>User Login</title>
+<title>Login</title>
 <link rel="stylesheet" href="Views/bootstrap.min.css">
 <script src="Components/jquery-3.2.1.min.js"></script>
-<script src="Components/user.js"></script>
+<script src="Components/log.js"></script>
 </head>
-<body> 
-		<div class="container"><div class="row"><div class="col-2"> 
-		<h1>User Login</h1>
-		<form id="formItem" name="formItem">
- 		
- 		
- 		<br>User Name : 
- 		<input id="usern" name="usern" type="text" 
- 		class="form-control form-control-sm">
- 		
- 		<br>Password : 
- 		<input id="pass" name="pass" type="text" 
- 		class="form-control form-control-sm"><br>
- 		
- <input id="btnLog" name="btnLog" type="button" value="Login" 
+<body>
+<div class="container">
+<div class="row">
+<div class="col-6">
+<h1>Login</h1>
+<form id="formLogin">
+ Username: 
+ <input id="usern" name="usern" type="text" 
+ class="form-control form-control-sm">
+ Password: 
+ <input id="pass" name="pass" type="password" 
+ class="form-control form-control-sm">
+ <br>
+ <input id="btnLogin" name="btnLogin" type="button" value="Login" 
  class="btn btn-primary">
- <input type="hidden" id="userLog" 
- name="userLog" value="">
+ <br>
+ <br>
+ <div id="alertError" class="alert alert-danger"></div>
 </form>
-<div id="alertSuccess" class="alert alert-success"></div>
-<div id="alertError" class="alert alert-danger"></div>
-<br>
-<div id="divItemsGrid">
-
-
-<br>
+<p class="text"><a href="Register.jsp">Sing up</a></p>
+ </div>
 </div>
-</div> </div> </div> 
+</div>
 </body>
 </html>

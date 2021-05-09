@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class logAPI
@@ -24,26 +25,32 @@ public class logAPI extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("NewFile.jsp");
-		dispatcher.forward(request,response);
-	}
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		
-		String output = itemObj4.login(request.getParameter("usern"), 
-				request.getParameter("pass"));
-		
-		response.setContentType("text/html;charset=UTF-8");
-	    response.setHeader("Cache-Control", "no-cache");
-		
-				response.getWriter().write(output); 
-	}
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    		throws ServletException, IOException 
+    		{ 
+    		 HttpSession session = request.getSession(); 
+    		 String authStatus = itemObj4.login(request.getParameter("usern"), 
+    		 request.getParameter("pass")); 
+    		 String output = ""; 
+    		if (authStatus.equals("success")) 
+    		 { 
+    		 output = "{\"status\":\"success\", \"data\": \"\"}"; 
+    		 session.setAttribute("usern", 
+    		 request.getParameter("usern"));
+    		 } 
+    		else
+    		 { 
+    		 output = "{\"status\":\"error\", \"data\": \"" + authStatus + "\"}"; 
+    		 } 
+    		 response.getWriter().write(output); 
+    		}
+    
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+    		 throws ServletException, IOException 
+    		{ 
+    		 HttpSession session = request.getSession(); 
+    		session.invalidate(); 
+    		response.getWriter().write("success"); 
+    		}
 
 }

@@ -287,7 +287,7 @@ public class user {
 				if(rs.next()) {
 					
 					con.close();
-					return usern +" "+ "  Successfully loged in.";
+					output = "success";
 				}
 				else {
 					
@@ -797,7 +797,7 @@ public class user {
 				if(rs.next()) {
 					
 					con.close();
-					return usern +" "+ "  Successfully loged in.";
+					output = "success";
 				}
 				else {
 					
@@ -863,7 +863,7 @@ public class user {
 				if(rs.next()) {
 					
 					con.close();
-					return usern +" "+ "  Successfully loged in.";
+					output = "success";
 				}
 				else {
 					

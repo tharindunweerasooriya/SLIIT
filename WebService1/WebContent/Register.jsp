@@ -41,6 +41,8 @@
  name="hidItemIDSave" value="">
 </form>
 <br>
+<p class="text"><a href="Log.jsp">Sing in</a></p>
+<br>
 
 <br>
 <div id="divItemsGrid">
