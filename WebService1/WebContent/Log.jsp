@@ -27,6 +27,9 @@
  <div id="alertError" class="alert alert-danger"></div>
 </form>
 <p class="text"><a href="Register.jsp">Sing up</a></p>
+<br>
+<p class="text"><a href="adminLog.jsp">Admin Login</a></p>
+<p class="text"><a href="resercherLog.jsp">Researcher Login</a></p>
  </div>
 </div>
 </div>
